@@ -3,6 +3,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import BooksList from "./pages/BooksList";
+import BookDetail from "./pages/BookDetail";
+import AddBook from "./pages/AddBook";
 
 function App() {
   return (
@@ -15,6 +18,9 @@ function App() {
             <Dashboard />
           </ProtectedRoute>
         } />
+        <Route path="/books" element={<ProtectedRoute><BooksList /></ProtectedRoute>} />
+        <Route path="/books/:id" element={<ProtectedRoute><BookDetail /></ProtectedRoute>} />
+        <Route path="/books/add" element={<ProtectedRoute><AddBook /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
