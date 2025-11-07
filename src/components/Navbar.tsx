@@ -1,36 +1,73 @@
-import { useEffect, useState } from "react";
-import { getMe } from "../api/auth";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export default function Navbar() {
-  const [email, setEmail] = useState("");
+const Navbar: React.FC = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+    if (location.pathname === "/login" || location.pathname === "/register") {
+        return null;
+    }
 
-    getMe(token).then((res) => {
-      setEmail(res.user.email);
-    });
-  }, []);
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
+    return (
+        <nav className="bg-white border-b-4 border-black shadow-[0_4px_0_#000] mb-6">
+            <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+                <Link
+                    to="/books"
+                    className="font-extrabold text-2xl text-sky-600 tracking-tight hover:translate-y-[-2px] transition-transform"
+                >
+                    IT Literature
+                </Link>
 
-  return (
-    <nav style={{ padding: "10px", background: "#ddd" }}>
-      <Link to="/books">Books</Link> |{" "}
-      <Link to="/transactions">Transactions</Link> 
-      <span style={{ marginLeft: "20px" }}>Logged in as: {email}</span>
+                <div className="flex gap-6">
+                    <Link
+                        to="/books"
+                        className="font-medium text-gray-800 hover:text-sky-600 transition"
+                    >
+                        Books
+                    </Link>
+                    <Link
+                        to="/transactions"
+                        className="font-medium text-gray-800 hover:text-sky-600 transition"
+                    >
+                        Transactions
+                    </Link>
+                    <Link
+                        to="/checkout"
+                        className="font-medium text-gray-800 hover:text-sky-600 transition"
+                    >
+                        Checkout
+                    </Link>
+                </div>
 
-      <button
-        onClick={logout}
-        style={{ marginLeft: "20px", padding: "5px 10px" }}
-      >
-        Logout
-      </button>
-    </nav>
-  );
-}
+                {user ? (
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm text-gray-600">{user.email}</span>
+                        <button
+                            onClick={handleLogout}
+                            className="px-4 py-2 bg-sky-500 text-white font-semibold border-2 border-black rounded-md shadow-[3px_3px_0_#000] hover:translate-y-[-2px] active:translate-y-[2px] transition"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                ) : (
+                    <Link
+                        to="/login"
+                        className="px-4 py-2 border-2 border-black bg-sky-500 text-white font-semibold shadow-[3px_3px_0_#000] hover:translate-y-[-2px] transition"
+                    >
+                        Login
+                    </Link>
+                )}
+            </div>
+        </nav>
+    );
+};
+
+export default Navbar;
