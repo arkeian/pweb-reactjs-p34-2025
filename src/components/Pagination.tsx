@@ -1,67 +1,37 @@
-import React from "react";
-import Button from "./Button";
-
-interface PaginationProps {
-    currentPage: number;
+interface Pagination {
+    page: number;
     totalPages: number;
-    onPageChange: (page: number) => void;
+    onChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-    currentPage,
-    totalPages,
-    onPageChange,
-}) => {
-    if (totalPages <= 1) return null;
-
-    const handlePrevious = () => {
-        if (currentPage > 1) onPageChange(currentPage - 1);
-    };
-
-    const handleNext = () => {
-        if (currentPage < totalPages) onPageChange(currentPage + 1);
-    };
-
-    const renderPageNumbers = () => {
-        const pages = [];
-        for (let i = 1; i <= totalPages; i++) {
-            pages.push(
-                <button
-                    key={i}
-                    onClick={() => onPageChange(i)}
-                    className={`px-3 py-1 border-2 border-black mx-1 font-semibold shadow-[2px_2px_0_#000] rounded-md ${i === currentPage
-                            ? "bg-sky-500 text-white"
-                            : "bg-white text-gray-800 hover:bg-sky-50"
-                        } transition`}
-                >
-                    {i}
-                </button>
-            );
-        }
-        return pages;
-    };
-
+export default function Pagination({ page, totalPages, onChange }: Pagination) {
     return (
-        <div className="flex items-center justify-center gap-3 mt-6">
-            <Button
-                variant="secondary"
-                onClick={handlePrevious}
-                disabled={currentPage === 1}
+        // --- KOREKSI DISINI ---
+        <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-2 mt-4">
+            <button
+                disabled={page <= 1}
+                onClick={() => onChange(page - 1)}
+                // Hapus 'me-2' karena 'gap-2' sudah menangani
+                className="btn btn-outline-dark fw-bold"
+                style={{ boxShadow: "3px 3px 0 black" }}
             >
-                Previous
-            </Button>
+                Prev
+            </button>
 
-            <div className="flex items-center">{renderPageNumbers()}</div>
+            <span className="fw-semibold">
+                Page {page} of {totalPages}
+            </span>
 
-            <Button
-                variant="secondary"
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
+            <button
+                disabled={page >= totalPages}
+                onClick={() => onChange(page + 1)}
+                // Hapus 'ms-2' karena 'gap-2' sudah menangani
+                className="btn btn-outline-dark fw-bold"
+                style={{ boxShadow: "3px 3px 0 black" }}
             >
                 Next
-            </Button>
+            </button>
         </div>
+        // --- BATAS KOREKSI ---
     );
-};
-
-export default Pagination;
+}

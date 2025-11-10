@@ -1,23 +1,36 @@
 import React from "react";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string;
-    error?: string;
+interface Input {
+  label: string;
+  type?: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
+  placeholder?: string;
 }
 
-const Input: React.FC<InputProps> = ({ label, error, className = "", ...props }) => {
-    return (
-        <div className={`flex flex-col gap-2 ${className}`}>
-            {label && (
-                <label className="font-semibold text-gray-800 text-sm">{label}</label>
-            )}
-            <input
-                {...props}
-                className={`px-4 py-2 border-2 border-black rounded-md bg-white text-gray-800 focus:outline-none focus:ring-4 focus:ring-sky-300 focus:border-sky-500 shadow-[2px_2px_0_#000] transition-all`}
-            />
-            {error && <span className="text-red-500 text-xs">{error}</span>}
-        </div>
-    );
-};
-
-export default Input;
+export default function Input({
+  label,
+  type = "text",
+  name,
+  value,
+  onChange,
+  error,
+  placeholder,
+}: Input) {
+  return (
+    <div className="mb-3">
+      <label className="form-label fw-semibold">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`form-control nb-card ${error ? "is-invalid" : ""}`}
+      />
+      {error && <div className="invalid-feedback">{error}</div>}
+    </div>
+  );
+}
